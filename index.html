@@ -3,22 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Weather</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Weather app</title>
     <link rel="stylesheet" href="style.css" />
   </head>
+
   <body>
-    <div class="location">
-      <h1 class="location-timezone">Timezone</h1>
-      <canvas class="icon" width="128" height="128"></canvas>
+    <div class="app-wrap">
+      <header>
+        <input
+          type="text"
+          autocomplete="off"
+          class="search-box"
+          placeholder="Suche eine Stadt"
+        />
+      </header>
+      <main>
+        <section class="location">
+          <div class="city">Berlin, DE</div>
+          <div class="date">Donnerstag 22 August 2020</div>
+        </section>
+        <div class="current">
+          <div class="temp">20<span>°c</span></div>
+          <div class="weather">Sunny</div>
+          <div class="hi-low">Min.: 15°c / Max.: 30°c</div>
+        </div>
+      </main>
     </div>
-    <div class="temperature">
-      <div class="degree-section">
-        <h2 class="temperature-degree">34</h2>
-        <span>C</span>
-      </div>
-      <div class="temperatur-description">Its sexy warm</div>
-    </div>
+    <script src="weather.js"></script>
   </body>
-  <script src="skycons.js"></script>
-  <script src="weather.js"></script>
 </html>

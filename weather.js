@@ -1,43 +1,74 @@
-window.addEventListener("load", () => {
-  let longtitude;
-  let latitude;
-  let temperatureDescription = document.querySelector(
-    ".temperature-description"
-  );
-  let temperatureDegree = document.querySelector(".temperature-degree");
-  let locationTimezone = document.querySelector(".location-timezone");
+const api = {
+  key: "b76b2c10a8663a76702c8c94a86561a5",
+  base: "https://api.openweathermap.org/data/2.5/",
+};
 
-  //getting current long/lat
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      longtitude = position.coords.longitude;
-      latitude = position.coords.latitude;
+const searchbox = document.querySelector(".search-box");
+searchbox.addEventListener("keypress", setQuery);
 
-      // API connection
-      const proxy = "http://cors-anywhere.herokuapp.com/";
-      const api = `${proxy}api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=b76b2c10a8663a76702c8c94a86561a5`;
-
-      fetch(api)
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          console.log(data);
-          const { temperature, summary, icon } = data.currently;
-          //set DOM Elements from the API
-          temperatureDegree.textContent = temperature;
-          temperatureDescription.textContent = summary;
-          locationTimezone.textContent = data.timezone;
-          //set Icon
-          setIcons(icon, document.querySelector(".icon"));
-        });
-    });
+function setQuery(evt) {
+  if (evt.keyCode == 13) {
+    getResults(searchbox.value);
   }
-  //setting icons depending on weather condition
-  function setIcons(icon, iconId) {
-    const skycons = new Skycons({ color: "white" });
-    const currentIcon = icon.replace(/-/g, "_").toUpperCase();
-    skycons.play();
-    return skycons.set(iconId, Skycons[currentIcon]);
-  }
-});
+}
+
+function getResults(query) {
+  fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
+    .then((weather) => {
+      return weather.json();
+    })
+    .then(displayResults);
+}
+
+function displayResults(weather) {
+  let city = document.querySelector(".location .city");
+  city.innerText = `${weather.name}, ${weather.sys.country}`;
+
+  let now = new Date();
+  let date = document.querySelector(".location .date");
+  date.innerText = dateBuilder(now);
+
+  let temp = document.querySelector(".current .temp");
+  temp.innerHTML = `${Math.round(weather.main.temp)}<span>°c</span>`;
+
+  let weather_el = document.querySelector(".current .weather");
+  weather_el.innerText = weather.weather[0].main;
+
+  let hilow = document.querySelector(".hi-low");
+  hilow.innerText = `Min.: ${Math.round(
+    weather.main.temp_min
+  )}°c / Max.: ${Math.round(weather.main.temp_max)}°c`;
+}
+
+function dateBuilder(d) {
+  let months = [
+    "Januar",
+    "Februar",
+    "März",
+    "April",
+    "Mai",
+    "Juni",
+    "Juli",
+    "August",
+    "September",
+    "Oktober",
+    "November",
+    "Dezember",
+  ];
+  let days = [
+    "Sonntag",
+    "Montag",
+    "Dienstag",
+    "Mittwoch",
+    "Donnerstag",
+    "Freitag",
+    "Samstag",
+  ];
+
+  let day = days[d.getDay()];
+  let date = d.getDate();
+  let month = months[d.getMonth()];
+  let year = d.getFullYear();
+
+  return `${day} ${date} ${month} ${year}`;
+}
