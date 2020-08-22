@@ -2,7 +2,8 @@ const api = {
   key: "b76b2c10a8663a76702c8c94a86561a5",
   base: "https://api.openweathermap.org/data/2.5/",
 };
-
+// define weatherIcons
+var weatherIcons;
 const searchbox = document.querySelector(".search-box");
 searchbox.addEventListener("keypress", setQuery);
 
@@ -31,8 +32,21 @@ function displayResults(weather) {
   let temp = document.querySelector(".current .temp");
   temp.innerHTML = `${Math.round(weather.main.temp)}<span>°c</span>`;
 
-  let weather_el = document.querySelector(".current .weather");
-  weather_el.innerText = weather.weather[0].main;
+  document.getElementById("icon").classList.remove(icon);
+  let weather_el = document.getElementById("icon").classList.add(icon);
+  //document.querySelector(".current .weather");
+  var prefix = "wi wi-";
+  var code = weather.weather[0].id.toString();
+  console.log("Code:", code, "Typ", typeof code);
+  var icon = weatherIcons[code].icon;
+
+  // If we are not in the ranges mentioned above, add a day/night prefix.
+  if (!(code > 699 && code < 800) && !(code > 899 && code < 1000)) {
+    icon = "day-" + icon;
+  }
+
+  // Finally tack on the prefix.
+  icon = prefix + icon;
 
   let hilow = document.querySelector(".hi-low");
   hilow.innerText = `Min.: ${Math.round(
