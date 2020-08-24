@@ -399,35 +399,34 @@ function displayResults(weather) {
   temp.innerHTML = `${Math.round(weather.main.temp)}<span>°c</span>`;
 
   //document.querySelector(".current .weather");
-  var prefix = "wi wi-";
+  var prefix = "wi";
   var code = weather.weather[0].id.toString();
-  console.log("Code:", code, "Typ", typeof code);
   var icon = weatherIcons[code].icon;
-  console.log("Icon: ", icon);
 
   // If we are not in the ranges mentioned above, add a day/night prefix.
   if (!(code > 699 && code < 800) && !(code > 899 && code < 1000)) {
-    icon = "day-" + icon;
+    icon = "wi-day-" + icon;
   }
 
-  // Finally tack on the prefix.
-  icon = prefix + icon;
-  icon.trim();
-  str = "            NANI?";
-  str.replace(/\s/g, "");
-  console.log("str:", str);
-
-  console.log("prefix+icon=", icon, "typeof: ", typeof icon);
-
   // replace prefix with current one
-  let element = document.getElementById("icon");
-  let oldClass = element.className;
+  const element = document.getElementById("icon");
 
-  console.log("element:", element, "oldClass:", oldClass, "icon:", icon);
+  //after wi get the string
+  let oldIcon = element.className.substr(element.className.indexOf(" ") + 1);
+  console.log(oldIcon);
 
-  replaceClass(element, oldClass, icon);
-  function replaceClass(element, oldClass, icon) {
-    element.classList.replace(oldClass, icon);
+  // remove old icon keep prefix wi
+  removeClass(element, oldIcon);
+
+  // add new icon to prefix
+  addClass(element, icon);
+
+  function removeClass(element, oldClass) {
+    element.classList.remove(oldClass);
+  }
+
+  function addClass(element, icon) {
+    element.classList.add(icon);
   }
 
   let hilow = document.querySelector(".hi-low");
